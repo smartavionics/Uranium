@@ -46,6 +46,9 @@ class SceneNode:
         # Local transformation (from parent to local)
         self._transformation = Matrix()  # type: Matrix
 
+        # The node's original, local size independent of world transformations
+        self._original_size = None # type: Optional[Vector]
+
         # Convenience "components" of the transformation
         self._position = Vector()  # type: Vector
         self._scale = Vector(1.0, 1.0, 1.0)  # type: Vector
@@ -701,6 +704,8 @@ class SceneNode:
     def _calculateAABB(self) -> None:
         if self._mesh_data:
             aabb = self._mesh_data.getExtents(self.getWorldTransformation())
+            if self._original_size is None:
+                self._original_size = Vector(aabb.width, aabb.depth, aabb.height)
         else:  # If there is no mesh_data, use a boundingbox that encompasses the local (0,0,0)
             position = self.getWorldPosition()
             aabb = AxisAlignedBox(minimum = position, maximum = position)
