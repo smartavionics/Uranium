@@ -144,6 +144,7 @@ class Scene:
     ##  Add a file to be watched for changes.
     #   \param file_path The path to the file that must be watched.
     def addWatchedFile(self, file_path: str) -> None:
+        return
         # The QT 5.10.0 issue, only on Windows. Cura crashes after loading a stl file from USB/sd-card/Cloud-based drive
         if not Platform.isWindows():
             self._file_watcher.addPath(file_path)
@@ -151,6 +152,7 @@ class Scene:
     ##  Remove a file so that it will no longer be watched for changes.
     #   \param file_path The path to the file that must no longer be watched.
     def removeWatchedFile(self, file_path: str) -> None:
+        return
         # The QT 5.10.0 issue, only on Windows. Cura crashes after loading a stl file from USB/sd-card/Cloud-based drive
         if not Platform.isWindows():
             self._file_watcher.removePath(file_path)
