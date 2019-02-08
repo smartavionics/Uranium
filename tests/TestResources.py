@@ -5,7 +5,9 @@ import os
 import platform
 from unittest import TestCase
 
-from UM.Resources import Resources
+import pytest
+
+from UM.Resources import Resources, ResourceTypeError, UnsupportedStorageTypeError
 
 
 class TestResources(TestCase):
@@ -113,3 +115,46 @@ class TestResources(TestCase):
 
         cache_root_path = Resources._getCacheStorageRootPath()
         self.assertIsNone("expected None, got %s" % cache_root_path)
+
+    def test_getStoragePathForType(self):
+        with pytest.raises(ResourceTypeError):
+            # No types have been added, so this should break!
+            Resources.getAllResourcesOfType(0)
+        with pytest.raises(UnsupportedStorageTypeError):
+            # We still havent added it, so it should fail (again)
+            Resources.getStoragePathForType(0)
+
+        Resources.addStorageType(0, "/test")
+        assert Resources.getStoragePathForType(0) == "/test"
+
+    def test_copyVersionFolder(self):
+        import tempfile
+        import os
+        folder_to_copy = tempfile.mkdtemp("test_folder_origin")
+        file_to_copy = tempfile.mkstemp(dir=str(folder_to_copy))
+
+        folder_to_move_to = tempfile.mkdtemp("test_folder_destination")
+
+        Resources.copyVersionFolder(str(folder_to_copy), str(folder_to_move_to) + "/target")
+        # We put a temp file in the folder to copy, check if it arrived there.
+        assert len(os.listdir(str(folder_to_move_to) + "/target")) == 1
+
+    def test_addRemoveStorageType(self):
+        Resources.addStorageType(9901, "YAY")
+        Resources.addType(9902, "whoo")
+        Resources.addStorageType(100, "herpderp")
+
+        with pytest.raises(ResourceTypeError):
+            # We can't add the same type again
+            Resources.addStorageType(9901, "nghha")
+
+        Resources.removeType(9001)
+
+        with pytest.raises(ResourceTypeError):
+            # We can't do that, since it's in the range of user types.
+            Resources.removeType(100)
+
+        with pytest.raises(ResourceTypeError):
+            # We can't do that, since it's in the range of user types.
+            Resources.addType(102, "whoo")
+

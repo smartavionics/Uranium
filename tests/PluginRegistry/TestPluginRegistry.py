@@ -94,14 +94,31 @@ class TestPluginRegistry():
         assert extension_added
         assert description_added
 
+    def test_installPlugin(self, registry):
+        path = "file://" + os.path.abspath(os.path.dirname(os.path.abspath(__file__))+ "/UraniumExampleExtensionPlugin.umplugin")
+        result = registry.installPlugin(path)
+        assert result.get("status") == "ok"
+
+        # Ensure that the plugin is now marked as installed (although the actual installation happens on next restart!)
+        assert "UraniumExampleExtensionPlugin" in registry.getInstalledPlugins()
+
+    def test__installPlugin(self, registry):
+        # This tests that the unpacking of the plugin doesn't fail.
+        path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UraniumExampleExtensionPlugin.umplugin")
+        registry._installPlugin("UraniumExampleExtensionPlugin", path)
+
+    def test__subsetInDict(self, registry):
+        assert not registry._subsetInDict({}, {"test": "test"})
+        assert not registry._subsetInDict( {"test": "omg"}, {"test": "test"})
+        assert registry._subsetInDict({"test": "test", "zomg": "omg"}, {"test": "test"})
+
     def test_requiredPlugins(self, registry):
         assert registry.checkRequiredPlugins(["EmptyPlugin", "OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"])
 
         assert not registry.checkRequiredPlugins(["TheNotLoadedPlugin"])
 
     def test_metaData(self, registry):
-        metadata = registry.getMetaData("TestPlugin")
-        assert metadata == {"id": "TestPlugin",
+        expected_metadata = {"id": "TestPlugin",
                             "plugin": {"name": "TestPlugin",
                                        "api": 5,
                                        "supported_sdk_versions": [Version(5)],
@@ -110,6 +127,16 @@ class TestPluginRegistry():
                                        "description": "test"},
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
+
+        metadata = registry.getMetaData("TestPlugin")
+        assert metadata == expected_metadata
+
+        all_metadata = registry.getAllMetaData()
+
+        for plugin_metadata in all_metadata:
+            if plugin_metadata.get("id") == "TestPlugin":
+                assert plugin_metadata == metadata
+
 
     def test_getPluginLocation(self, registry):
         # Plugin is not loaded yet, so it should raise a KeyError
