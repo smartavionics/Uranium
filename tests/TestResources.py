@@ -4,7 +4,7 @@
 import os
 import platform
 from unittest import TestCase
-
+import tempfile
 import pytest
 
 from UM.Resources import Resources, ResourceTypeError, UnsupportedStorageTypeError
@@ -116,6 +116,48 @@ class TestResources(TestCase):
         cache_root_path = Resources._getCacheStorageRootPath()
         self.assertIsNone("expected None, got %s" % cache_root_path)
 
+    def test_getPossibleConfigStorageRootPathList_Linux(self):
+        if platform.system() != "Linux":
+            self.skipTest("not on Linux")
+
+        # We didn't add any paths, so it will use defaults
+        assert Resources._getPossibleConfigStorageRootPathList() == ['/tmp/test']
+
+    def test_getPossibleDataStorageRootPathList_Linux(self):
+        if platform.system() != "Linux":
+            self.skipTest("not on Linux")
+        # We didn't add any paths, so it will use defaults
+        assert Resources._getPossibleDataStorageRootPathList() == ['/tmp/test']
+
+    def test_factoryReset(self):
+        Resources.factoryReset()
+        # Check if the data is deleted!
+        assert len(os.listdir(Resources.getDataStoragePath())) == 0
+
+        # The data folder should still be there, but it should also have created a zip with the data it deleted.
+        assert len(os.listdir(os.path.dirname(Resources.getDataStoragePath()))) == 2
+
+        # Clean up after our ass.
+        folder = os.path.dirname(Resources.getDataStoragePath())
+        for file in os.listdir(folder):
+            file_path = os.path.join(folder, file)
+            print(file_path)
+            try:
+                os.unlink(file_path)
+            except:
+                pass
+        folder =  os.path.dirname(Resources.getDataStoragePath())
+        for file in os.listdir(folder):
+            file_path = os.path.join(folder, file)
+            try:
+                os.unlink(file_path)
+            except:
+                pass
+
+    def test_copyLatestDirsIfPresent(self):
+        # Just don't fail.
+        Resources._copyLatestDirsIfPresent()
+
     def test_getStoragePathForType(self):
         with pytest.raises(ResourceTypeError):
             # No types have been added, so this should break!
@@ -127,8 +169,14 @@ class TestResources(TestCase):
         Resources.addStorageType(0, "/test")
         assert Resources.getStoragePathForType(0) == "/test"
 
+    def test_getAllResourcesOfType(self):
+        resouce_folder = tempfile.mkdtemp("test_folder_origin")
+        resource_file = tempfile.mkstemp(dir=str(resouce_folder))
+        Resources.addStorageType(111, resouce_folder)
+        assert Resources.getAllResourcesOfType(111) == [resource_file[1]]
+
     def test_copyVersionFolder(self):
-        import tempfile
+
         import os
         folder_to_copy = tempfile.mkdtemp("test_folder_origin")
         file_to_copy = tempfile.mkstemp(dir=str(folder_to_copy))
@@ -138,6 +186,17 @@ class TestResources(TestCase):
         Resources.copyVersionFolder(str(folder_to_copy), str(folder_to_move_to) + "/target")
         # We put a temp file in the folder to copy, check if it arrived there.
         assert len(os.listdir(str(folder_to_move_to) + "/target")) == 1
+
+    def test_findLatestDirInPaths(self):
+        test_folder = tempfile.mkdtemp("test_folder")
+        os.mkdir(os.path.join(test_folder, "whatever"))
+
+        # There is no folder that matches what we're looking for!
+        assert Resources._findLatestDirInPaths([test_folder]) is None
+
+        os.mkdir(os.path.join(test_folder, Resources.ApplicationVersion))
+        # We should obviously find the folder that was created by means of the ApplicationVersion.
+        assert Resources._findLatestDirInPaths([test_folder]) == os.path.join(test_folder, Resources.ApplicationVersion)
 
     def test_addRemoveStorageType(self):
         Resources.addStorageType(9901, "YAY")
@@ -149,6 +208,7 @@ class TestResources(TestCase):
             Resources.addStorageType(9901, "nghha")
 
         Resources.removeType(9001)
+        Resources.removeType(9902)
 
         with pytest.raises(ResourceTypeError):
             # We can't do that, since it's in the range of user types.
