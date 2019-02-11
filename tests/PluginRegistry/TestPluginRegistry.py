@@ -9,6 +9,7 @@ from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Version import Version
+import json
 
 
 valid_plugin_json_data = [
@@ -62,7 +63,10 @@ class TestPluginRegistry():
         with patch("builtins.open", mock_open()) as mock_file:
             registry._savePluginData()
             handle = mock_file()
-            handle.write.assert_called_once_with('{"disabled": [], "to_install": {}, "to_remove": []}')
+
+            writen_data = json.loads(handle.write.call_args[0][0])
+            expected_data = json.loads('{"disabled": [], "to_install": {}, "to_remove": []}')
+            assert writen_data == expected_data
 
     def test_uninstallPlugin(self, registry):
         with patch("builtins.open", mock_open()) as mock_file:
@@ -72,7 +76,10 @@ class TestPluginRegistry():
 
             registry.loadPlugins()
             registry.uninstallPlugin("TestPlugin")
-            handle.write.assert_called_once_with('{"disabled": [], "to_install": {}, "to_remove": ["TestPlugin"]}')
+            writen_data = json.loads(handle.write.call_args[0][0])
+            expected_data = json.loads('{"disabled": [], "to_install": {}, "to_remove": ["TestPlugin"]}')
+            assert writen_data == expected_data
+
             assert "TestPlugin" not in registry.getInstalledPlugins()
 
     def test_isBundledPlugin(self, registry):
@@ -95,7 +102,7 @@ class TestPluginRegistry():
         assert description_added
 
     def test_installPlugin(self, registry):
-        path = "file://" + os.path.abspath(os.path.dirname(os.path.abspath(__file__))+ "/UraniumExampleExtensionPlugin.umplugin")
+        path = "file://" + os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UraniumExampleExtensionPlugin.umplugin")
         result = registry.installPlugin(path)
         assert result.get("status") == "ok"
 
@@ -136,7 +143,6 @@ class TestPluginRegistry():
         for plugin_metadata in all_metadata:
             if plugin_metadata.get("id") == "TestPlugin":
                 assert plugin_metadata == metadata
-
 
     def test_getPluginLocation(self, registry):
         # Plugin is not loaded yet, so it should raise a KeyError
