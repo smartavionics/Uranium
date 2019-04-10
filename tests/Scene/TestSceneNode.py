@@ -1,6 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
+from UM.Mesh.MeshData import MeshData
+from UM.Scene.GroupDecorator import GroupDecorator
 from UM.Scene.SceneNode import SceneNode
 
 from UM.Math.Vector import Vector
@@ -10,6 +11,8 @@ from UM.Math.Float import Float
 
 import unittest
 import math
+
+from copy import deepcopy
 
 class SceneNodeTest(unittest.TestCase):
     def setUp(self):
@@ -265,7 +268,37 @@ class SceneNodeTest(unittest.TestCase):
         self.assertEqual(node2.getWorldPosition(), Vector(15,10,10))
         node2.scale(Vector(1.5,1,1))
         self.assertEqual(node2.getWorldPosition(), Vector(15,10,10))
-        pass
+
+    def test_deepCopy(self):
+        node_1 = SceneNode()
+        node_2 = SceneNode()
+        node_1.translate(Vector(1, 2, 3))
+        node_1.scale(Vector(1.5, 1., 1.))
+        node_1.setMeshData(MeshData())
+        node_1.addChild(node_2)
+        node_1.addDecorator(GroupDecorator())
+        copied_node = deepcopy(node_1)
+
+        assert copied_node.getScale() == Vector(1.5, 1, 1)
+        assert copied_node.getPosition() == Vector(1, 2, 3)
+        assert len(copied_node.getChildren()) == 1
+        # Ensure that the decorator also got copied
+        assert copied_node.callDecoration("isGroup")
+
+    def test_addRemoveDouble(self):
+        # Adding a child that's already a child of a node should not cause issues. Same for trying to remove one that isn't a child
+
+        node_1 = SceneNode()
+        node_2 = SceneNode()
+        # Should work
+        node_1.addChild(node_2)
+        # Should still work!
+        node_1.addChild(node_2)
+
+        # This has already been tested somewhere else, so no problems are expected
+        node_1.removeChild(node_2)
+        # Doing it again shouldn't break.
+        node_1.removeChild(node_2)
 
 if __name__ == "__main__":
     unittest.main()
