@@ -10,6 +10,7 @@ from typing import Any, TYPE_CHECKING, cast
 
 from UM.Logger import Logger
 
+from UM.Version import Version
 from UM.View.GL.FrameBufferObject import FrameBufferObject
 from UM.View.GL.ShaderProgram import ShaderProgram
 from UM.View.GL.ShaderProgram import InvalidShaderProgramError
@@ -98,10 +99,11 @@ class OpenGL:
 
         self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION) #type: str
 
+        self._opengl_shading_language_version = Version("0.0")  # type: Version
         try:
-            self._opengl_shading_language_version = float(self._gl.glGetString(self._gl.GL_SHADING_LANGUAGE_VERSION))
+            self._opengl_shading_language_version = Version(self._gl.glGetString(self._gl.GL_SHADING_LANGUAGE_VERSION))
         except:
-            self._opengl_shading_language_version = 1.0
+            self._opengl_shading_language_version = Version("1.0")
 
         if not self.hasFrameBufferObjects():
             Logger.log("w", "No frame buffer support, falling back to texture copies.")
@@ -110,7 +112,7 @@ class OpenGL:
         Logger.log("d", "OpenGL Version:  %s", self._opengl_version)
         Logger.log("d", "OpenGL Vendor:   %s", self._gl.glGetString(self._gl.GL_VENDOR))
         Logger.log("d", "OpenGL Renderer: %s", self._gpu_type)
-        Logger.log("d", "GLSL Version:    %f", self._opengl_shading_language_version)
+        Logger.log("d", "GLSL Version:    %s", self._opengl_shading_language_version)
 
     ##  Check if the current OpenGL implementation supports FrameBuffer Objects.
     #
@@ -127,7 +129,7 @@ class OpenGL:
     ##  Get the current OpenGL shading language version.
     #
     #   \return Shading language version of OpenGL
-    def getOpenGLShadingLanguageVersion(self) -> float:
+    def getOpenGLShadingLanguageVersion(self) -> "Version":
         return self._opengl_shading_language_version
 
     ##  Get the current GPU vendor name.
