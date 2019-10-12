@@ -1,6 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import sys
 import threading
 import traceback
 import inspect
@@ -70,7 +71,7 @@ class Logger:
             print("FAILED TO LOG: ", log_type, message, e)
 
         if not cls.__loggers:
-            print(message)
+            print(message, file=sys.stderr)
 
     ##  Logs that an exception occurs.
     #
