@@ -15,9 +15,9 @@ import time
 def deprecated(message, since = "Unknown"): #pylint: disable=bad-whitespace
     def deprecated_decorator(function):
         def deprecated_function(*args, **kwargs):
-            warning = "{0} is deprecated (since {1}): {2}".format(function, since, message)
-            Logger.log("w_once", warning)
-            warnings.warn(warning, DeprecationWarning, stacklevel=2)
+            #warning = "{0} is deprecated (since {1}): {2}".format(function, since, message)
+            #Logger.log("w_once", warning)
+            #warnings.warn(warning, DeprecationWarning, stacklevel=2)
             return function(*args, **kwargs)
         return deprecated_function
     return deprecated_decorator
