@@ -376,7 +376,6 @@ class ContainerRegistry(ContainerRegistryInterface):
     def addContainer(self, container: ContainerInterface) -> None:
         container_id = container.getId()
         if container_id in self._containers:
-            Logger.log("w", "Container with ID %s was already added.", container_id)
             return
 
         if hasattr(container, "metaDataChanged"):
@@ -488,6 +487,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   a number behind it to make it unique.
     @UM.FlameProfiler.profile
     def uniqueName(self, original: str) -> str:
+        original = original.replace("*", "")  # Filter out wildcards, since this confuses the ContainerQuery.
         name = original.strip()
 
         num_check = re.compile(r"(.*?)\s*#\d+$").match(name)

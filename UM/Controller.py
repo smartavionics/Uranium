@@ -38,6 +38,7 @@ class Controller:
         self._views = {}  # type: Dict[str, View]
 
         self._active_tool = None  # type: Optional[Tool]
+        self._fallback_tool = "TranslateTool"  # type: str
         self._tool_operation_active = False
         self._tools = {}  # type: Dict[str, Tool]
         self._camera_tool = None #type: Optional[Tool]
@@ -194,7 +195,18 @@ class Controller:
             self._input_devices[name].event.disconnect(self.event)
             del self._input_devices[name]
 
-    ##  Request tool by name. Returns None if no view is found.
+    ##  Request the current fallbacl tool.
+    #   \return Id of the fallback tool
+    def getFallbackTool(self) -> str:
+        return self._fallback_tool
+
+    ##  Set the current active tool. The tool must be set by name.
+    #   \param tool The tools name which shall be used as fallback
+    def setFallbackTool(self, tool: str) -> None:
+        if self._fallback_tool is not tool:
+            self._fallback_tool = tool
+
+    ##  Request tool by name. Returns None if no tool is found.
     #   \param name \type{string} Unique identifier of tool (usually the plugin name)
     #   \return tool \type{Tool} if name was found, None otherwise.
     def getTool(self, name: str) -> Optional["Tool"]:
@@ -264,8 +276,8 @@ class Controller:
 
         from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
         if not self._active_tool and Selection.getCount() > 0:  # If something is selected, a tool must always be active.
-            if "TranslateTool" in self._tools:
-                self._active_tool = self._tools["TranslateTool"]  # Then default to the translation tool.
+            if self._fallback_tool in self._tools:
+                self._active_tool = self._tools[self._fallback_tool]  # Then default to the translation tool.
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
                 tool_changed = True
             else:
@@ -410,13 +422,12 @@ class Controller:
             return
         camera.setZoomFactor(camera.getDefaultZoomFactor())
         self._camera_tool.setOrigin(Vector(0, 100, 0))  # type: ignore
+        self.setCameraOrigin(coordinate)
         if coordinate == "home":
             camera.setPosition(Vector(0, 100, 700))
-            camera.lookAt(Vector(0, 100, 0))
             self._camera_tool.rotateCamera(0, 0)  # type: ignore
         elif coordinate == "3d":
             camera.setPosition(Vector(-750, 600, 700))
-            camera.lookAt(Vector(0, 100, 100))
             self._camera_tool.rotateCamera(0, 0)  # type: ignore
         else:
             # for comparison is == used, because might not store them at the same location
@@ -424,19 +435,36 @@ class Controller:
 
             if coordinate == "x":
                 camera.setPosition(Vector(0, 100, 700))
-                camera.lookAt(Vector(0, 100, 0))
                 self._camera_tool.rotateCamera(angle, 0)  # type: ignore
             elif coordinate == "y":
                 if angle == 90:
                     # Prepare the camera for top view, so no rotation has to be applied after setting the top view.
                     camera.setPosition(Vector(0, 100, 100))
-                    camera.lookAt(Vector(0, 100, 0))
                     self._camera_tool.rotateCamera(90, 0)  # type: ignore
                     # Actually set the top view.
                     camera.setPosition(Vector(0, 800, 1))
+                    self.setCameraOrigin("z")
                     camera.lookAt(Vector(0, 100, 1))
                     self._camera_tool.rotateCamera(0, 0)  # type: ignore
                 else:
                     camera.setPosition(Vector(0, 100, 700))
-                    camera.lookAt(Vector(0, 100, 0))
                     self._camera_tool.rotateCamera(0, angle)  # type: ignore
+
+    ##  Changes the origin of the camera, i.e. where it looks at.
+    #   \param coordinate One of the following options:
+    #    - "home": The centre of the build plate.
+    #    - "3d": The centre of the build volume.
+    #    - "x", "y" and "z": Also the centre of the build plate. These are just
+    #      aliases for the setCameraRotation function.
+    def setCameraOrigin(self, coordinate: str = "home"):
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        coordinates = {
+            "home": Vector(0, 100, 0),
+            "3d": Vector(0, 100, 100),
+            "x": Vector(0, 100, 0),
+            "y": Vector(0, 100, 0),
+            "z": Vector(0, 100, 1)
+        }
+        camera.lookAt(coordinates[coordinate])
