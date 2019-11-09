@@ -13,11 +13,12 @@ import UM.Application
 MYPY = False
 if MYPY:
     from UM.Controller import Controller
+    from UM.Event import Event
 
 
 ## Abstract base class for view objects.
 class View(QObject, PluginObject):
-    def __init__(self, parent = None):
+    def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self._renderer = None  # type: Optional[Renderer]
         self._controller = UM.Application.Application.getInstance().getController()  # type: Controller
@@ -69,5 +70,5 @@ class View(QObject, PluginObject):
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.
     #   \sa Event
-    def event(self, event):
+    def event(self, event: "Event") -> bool:
         pass
