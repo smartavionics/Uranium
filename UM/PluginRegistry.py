@@ -21,6 +21,7 @@ from UM.Resources import Resources
 from UM.Trust import Trust
 from UM.Version import Version
 import time
+from PyQt5.QtCore import QCoreApplication
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -270,7 +271,7 @@ class PluginRegistry(QObject):
 
         return self._metadata[plugin_id]
 
-    @pyqtSlot(str, result="QVariantMap")
+    @pyqtSlot(str, result = "QVariantMap")
     def installPlugin(self, plugin_path: str) -> Optional[Dict[str, str]]:
         plugin_path = QUrl(plugin_path).toLocalFile()
 
@@ -359,6 +360,7 @@ class PluginRegistry(QObject):
                 #
                 try:
                     self.loadPlugin(plugin_id)
+                    QCoreApplication.processEvents()  # Ensure that the GUI does not freeze.
                     # Add the plugin to the list after actually load the plugin:
                     self._all_plugins.append(plugin_id)
                     self._plugins_installed.append(plugin_id)
@@ -445,7 +447,7 @@ class PluginRegistry(QObject):
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
     #   Uninstall a plugin with a given ID:
-    @pyqtSlot(str, result="QVariantMap")
+    @pyqtSlot(str, result = "QVariantMap")
     def uninstallPlugin(self, plugin_id: str) -> Dict[str, str]:
         result = {"status": "error", "message": "", "id": plugin_id}
         success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName())
