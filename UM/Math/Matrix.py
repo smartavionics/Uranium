@@ -144,12 +144,12 @@ class Matrix:
     ##  Return the transpose of the matrix.
     def getTransposed(self) -> "Matrix":
         try:
-            return Matrix(numpy.transpose(self._data))
+            return Matrix(self._data.transpose())
         except:
             return Matrix(self._data)
 
     def transpose(self) -> None:
-        self._data = numpy.transpose(self._data)
+        self._data = self._data.transpose()
 
     ##  Translate the matrix based on Vector.
     #   \param direction The vector by which the matrix needs to be translated.
