@@ -109,7 +109,7 @@ class HttpRequestManager(TaskManager):
         # and log them.
         self._enable_request_benchmarking = enable_request_benchmarking
 
-        # Public API for creating an HTTP GET request.
+    # Public API for creating an HTTP GET request.
     # Returns an HttpRequestData instance that represents this request.
     def get(self, url: str,
             headers_dict: Optional[Dict[str, str]] = None,
@@ -161,6 +161,23 @@ class HttpRequestManager(TaskManager):
                                    upload_progress_callback = upload_progress_callback,
                                    timeout = timeout,
                                    scope = scope)
+
+    # Public API for creating an HTTP DELETE request.
+    # Returns an HttpRequestData instance that represents this request.
+    def delete(self, url: str,
+               headers_dict: Optional[Dict[str, str]] = None,
+               callback: Optional[Callable[["QNetworkReply"], None]] = None,
+               error_callback: Optional[Callable[["QNetworkReply", "QNetworkReply.NetworkError"], None]] = None,
+               download_progress_callback: Optional[Callable[[int, int], None]] = None,
+               upload_progress_callback: Optional[Callable[[int, int], None]] = None,
+               timeout: Optional[float] = None,
+               scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
+        return self._createRequest("deleteResource", url, headers_dict=headers_dict,
+                                   callback=callback, error_callback=error_callback,
+                                   download_progress_callback=download_progress_callback,
+                                   upload_progress_callback=upload_progress_callback,
+                                   timeout=timeout,
+                                   scope=scope)
 
     # Public API for aborting a given HttpRequestData. If the request is not pending or in progress, nothing
     # will be done.
@@ -341,9 +358,12 @@ class HttpRequestManager(TaskManager):
         # aborted. This can be done by checking if the error is QNetworkReply.OperationCanceledError. If a request was
         # aborted due to timeout, the request's HttpRequestData.is_aborted_due_to_timeout will be set to True.
         #
-        # We do nothing if the request was aborted because an error callback will also be triggered by Qt.
-        if request_data.reply is not None and request_data.reply.error() == QNetworkReply.OperationCanceledError:
-            Logger.log("d", "%s was aborted, do nothing", request_data)
+        # We do nothing if the request was aborted or and error was detected because an error callback will also
+        # be triggered by Qt.
+        if request_data.reply is not None and request_data.reply.error() != QNetworkReply.NoError:
+            if request_data.reply.error() == QNetworkReply.OperationCanceledError:
+                Logger.log("d", "%s was aborted, do nothing", request_data)
+            # stop processing for any kind of error
             return
 
         Logger.log("i", "Request [%s] finished.", request_data.request_id)
