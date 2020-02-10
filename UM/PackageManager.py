@@ -16,6 +16,7 @@ from UM.Logger import Logger
 from UM.Message import Message
 from UM.MimeTypeDatabase import MimeTypeDatabase  # To get the type of container we're loading.
 from UM.Resources import Resources
+from UM.Signal import Signal
 from UM.Version import Version as UMVersion
 
 catalog = i18nCatalog("uranium")
@@ -71,6 +72,7 @@ class PackageManager(QObject):
 
         self._packages_with_update_available = set()  # type: Set[str]
 
+    packageInstalled = Signal()  # Emits the package_id (str) of an installed package
     installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
     packagesWithUpdateChanged = pyqtSignal()
 
@@ -93,8 +95,10 @@ class PackageManager(QObject):
     def packagesWithUpdate(self) -> Set[str]:
         return self._packages_with_update_available
 
-    ## Alternative way of setting the available package updates without having to check all packages in the cloud.
     def setPackagesWithUpdate(self, packages: Set[str]):
+        """Alternative way of setting the available package updates without having to check all packages in the
+        cloud. """
+
         self._packages_with_update_available = packages
         self.packagesWithUpdateChanged.emit()
 
@@ -136,7 +140,7 @@ class PackageManager(QObject):
         self._bundled_package_dict = {}
         for search_path in self._bundled_package_management_file_paths:
             with open(search_path, "r", encoding = "utf-8") as f:
-                self._bundled_package_dict.update(json.load(f, encoding = "utf-8"))
+                self._bundled_package_dict.update(json.load(f))
                 Logger.log("i", "Loaded bundled packages data from %s", search_path)
 
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
@@ -146,7 +150,7 @@ class PackageManager(QObject):
                 # Load the user packages:
                 with open(cast(str, self._user_package_management_file_path), "r", encoding="utf-8") as f:
                     try:
-                        management_dict = json.load(f, encoding="utf-8")
+                        management_dict = json.load(f)
                     except JSONDecodeError:
                         # The file got corrupted, ignore it. This happens extremely infrequently.
                         # The file will get overridden once a user downloads something.
@@ -303,9 +307,12 @@ class PackageManager(QObject):
     def getUserInstalledPackages(self) -> List[str]:
         return [package for package in self._installed_package_dict]
 
-    ## Get a list of tuples that contain the package ID and version.
-    #  Used by the Marketplace to check which packages have updates available.
     def getAllInstalledPackageIdsAndVersions(self) -> List[Tuple[str, str]]:
+        """Get a list of tuples that contain the package ID and version.
+
+        Used by the Marketplace to check which packages have updates available.
+        """
+
         package_ids_and_versions = []  # type: List[Tuple[str, str]]
         all_installed_ids = self.getAllInstalledPackageIDs()
         for package_id in all_installed_ids:
@@ -378,16 +385,19 @@ class PackageManager(QObject):
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
 
-    # This is called by drag-and-dropping curapackage files.
     @pyqtSlot(QUrl)
     def installPackageViaDragAndDrop(self, file_url: str) -> None:
+        """This is called by drag-and-dropping curapackage files."""
         filename = QUrl(file_url).toLocalFile()
         return self.installPackage(filename)
 
-    ## Schedules the given package file to be installed upon the next start.
-    # \return The to-be-installed package_id or None if something went wrong
     @pyqtSlot(str)
     def installPackage(self, filename: str) -> Optional[str]:
+        """Schedules the given package file to be installed upon the next start.
+
+        :return: The to-be-installed package_id or None if something went wrong
+        """
+
         has_changes = False
         package_id = ""
         try:
@@ -436,6 +446,7 @@ class PackageManager(QObject):
                         self.packagesWithUpdateChanged.emit()
 
         if has_changes:
+            self.packageInstalled.emit(package_id)
             return package_id
         else:
             return None
@@ -471,6 +482,8 @@ class PackageManager(QObject):
 
     ##  Is the package an user installed package?
     def isUserInstalledPackage(self, package_id: str) -> bool:
+        """Is the package an user installed package?"""
+
         return package_id in self._installed_package_dict
 
     # Removes everything associated with the given package ID.
@@ -592,9 +605,10 @@ class PackageManager(QObject):
                     license_string = None
         return license_string
 
-    ##  Find the package files by package_id by looking at the installed folder
     @staticmethod
     def getPackageFiles(package_id) -> List[Tuple[str, List[str]]]:
+        """Find the package files by package_id by looking at the installed folder"""
+
         data_storage_dir = os.path.abspath(Resources.getDataStoragePath())
 
         os_walk = []
@@ -614,9 +628,10 @@ class PackageManager(QObject):
 
         return result
 
-    ##  Return container ids for contents found with package_id
     @staticmethod
     def getPackageContainerIds(package_id: str) -> List[str]:
+        """Return container ids for contents found with package_id"""
+
         package_files = PackageManager.getPackageFiles(package_id)
         ids = []
         for root_path, file_names in package_files:
@@ -627,9 +642,10 @@ class PackageManager(QObject):
                     ids.append(id)
         return ids
 
-    ##  Try to return Id for given path by looking at its existence in the mimetype database
     @staticmethod
     def convertPathToId(path: str) -> str:
+        """Try to return Id for given path by looking at its existence in the mimetype database"""
+
         mime = None
         try:
             mime = MimeTypeDatabase.getMimeTypeForFile(path)
