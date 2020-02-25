@@ -1,6 +1,6 @@
 project(uranium NONE)
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.12)
 
 message(STATUS ${CMAKE_MODULE_PATH})
 
@@ -10,7 +10,9 @@ include(UraniumTranslationTools)
 
 include(GNUInstallDirs)
 
-find_package(PythonInterp 3 REQUIRED)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+set(PYTHON_VERSION_MAJOR ${Python3_VERSION_MAJOR})
+set(PYTHON_VERSION_MINOR ${Python3_VERSION_MINOR})
 
 # # Checks using pylint
 # Note that we use exit 0 here to not mark the build as a failure on check failure
