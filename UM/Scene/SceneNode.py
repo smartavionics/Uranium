@@ -2,20 +2,21 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
-import numpy
 from typing import Any, Dict, List, Optional, cast
 
-from UM.Math.Matrix import Matrix
-from UM.Math.Vector import Vector
-from UM.Math.Quaternion import Quaternion
-from UM.Math.AxisAlignedBox import AxisAlignedBox
-from UM.Mesh.MeshData import MeshData
+import numpy
 
-from UM.Signal import Signal, signalemitter
-from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
-
+from UM.Math.AxisAlignedBox import AxisAlignedBox
+from UM.Math.Matrix import Matrix
+from UM.Math.Quaternion import Quaternion
+from UM.Math.Vector import Vector
+from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.Mesh.MeshData import MeshData
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
+from UM.Signal import Signal, signalemitter
+
+
 @signalemitter
 class SceneNode:
     """A scene node object.
