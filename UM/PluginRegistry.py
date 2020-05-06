@@ -20,7 +20,7 @@ from UM.Platform import Platform
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.PluginObject import PluginObject  # For type hinting
 from UM.Resources import Resources
-from UM.Trust import Trust, TrustException
+from UM.Trust import Trust, TrustException, TrustBasics
 from UM.Version import Version
 from UM.i18n import i18nCatalog
 
@@ -547,16 +547,20 @@ class PluginRegistry(QObject):
             paths = self._plugin_locations
 
         for folder in paths:
-            if not os.path.isdir(folder):
-                continue
+            try:
+                if not os.path.isdir(folder):
+                    continue
 
-            for file in os.listdir(folder):
-                filepath = os.path.join(folder, file)
-                if os.path.isdir(filepath):
-                    if os.path.isfile(os.path.join(filepath, "__init__.py")):
-                        plugin_ids.append(file)
-                    else:
-                        plugin_ids += self._findInstalledPlugins([filepath])
+                for file in os.listdir(folder):
+                    filepath = os.path.join(folder, file)
+                    if os.path.isdir(filepath):
+                        if os.path.isfile(os.path.join(filepath, "__init__.py")):
+                            plugin_ids.append(file)
+                        else:
+                            plugin_ids += self._findInstalledPlugins([filepath])
+            except EnvironmentError as err:
+                Logger.warning("Unable to read folder {folder}: {err}".format(folder = folder, err = err))
+                continue
 
         return plugin_ids
 
@@ -588,18 +592,7 @@ class PluginRegistry(QObject):
         if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
 
             # NOTE: '__pychache__'s (+ subfolders) are deleted on startup _before_ load module:
-            try:
-                cache_folders_to_empty = []  # List[str]
-                for root, dirnames, filenames in os.walk(path, followlinks = True):
-                    for dirname in dirnames:
-                        if dirname == "__pycache__":
-                            cache_folders_to_empty.append(os.path.join(root, dirname))
-                for cache_folder in cache_folders_to_empty:
-                    for root, dirnames, filenames in os.walk(cache_folder, followlinks = True):
-                        for filename in filenames:
-                            os.remove(os.path.join(root, filename))
-            except:  # Yes, we  do really want this on _every_ exception that might occur.
-                Logger.logException("e", "Removal of pycache for unbundled plugin '{0}' failed.".format(plugin_id))
+            if not TrustBasics.removeCached(path):
                 self._distrusted_plugin_ids.append(plugin_id)
                 return None
 
