@@ -67,6 +67,8 @@ class OpenGLContext:
             result = True
         if not result and cls.hasExtension("GL_ARB_vertex_array_object", ctx = ctx):
             result = True
+        if not result and ctx.isOpenGLES() and cls.hasExtension("GL_OES_vertex_array_object", ctx = ctx):
+            result = True
         cls.properties["supportsVertexArrayObjects"] = result
         return result
 
