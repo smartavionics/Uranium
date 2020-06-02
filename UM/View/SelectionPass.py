@@ -17,6 +17,7 @@ from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.View.RenderPass import RenderPass
 from UM.View.RenderBatch import RenderBatch
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.OpenGLContext import OpenGLContext
 
 if TYPE_CHECKING:
     from UM.Scene.SceneNode import SceneNode
@@ -37,7 +38,10 @@ class SelectionPass(RenderPass):
         super().__init__("selection", width, height, -999)
 
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "selection.shader"))
-        self._face_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "select_face.shader"))
+        if OpenGLContext.haveGLESGeometryShader():
+            self._face_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "gles_select_face.shader"))
+        else:
+            self._face_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "select_face.shader"))
         self._tool_handle_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
         self._gl = OpenGL.getInstance().getBindingsObject()
         self._scene = Application.getInstance().getController().getScene()

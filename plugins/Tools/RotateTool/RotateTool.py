@@ -20,6 +20,7 @@ from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 from UM.Version import Version
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.OpenGLContext import OpenGLContext
 
 try:
     from . import RotateToolHandle
@@ -245,7 +246,8 @@ class RotateTool(Tool):
         :return: True if it is supported, or False otherwise.
         """
         # Use a dummy postfix, since an equal version with a postfix is considered smaller normally.
-        return Version(OpenGL.getInstance().getOpenGLVersion()) >= Version("4.1 dummy-postfix")
+        return (Version(OpenGL.getInstance().getOpenGLVersion()) >= Version("4.1 dummy-postfix") or
+            OpenGLContext.haveGLESGeometryShader())
 
     def getRotationSnap(self):
         """Get the state of the "snap rotation to N-degree increments" option
