@@ -15,6 +15,9 @@ vertex =
 geometry =
     #version 320 es
 
+    // GS is needed on the PI 4 because gl_PrimitiveID is not set implicitly
+    // can remove this GS when they get around to implementing more of 3.2
+
     layout(triangles) in;
     layout(triangle_strip, max_vertices = 3) out;
 
