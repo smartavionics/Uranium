@@ -79,7 +79,7 @@ class HttpRequestManager(TaskManager):
             cls.__instance = cls(*args, **kwargs)
         return cls.__instance
 
-    def __init__(self, max_concurrent_requests: int = 10, parent: Optional["QObject"] = None,
+    def __init__(self, max_concurrent_requests: int = 4, parent: Optional["QObject"] = None,
                  enable_request_benchmarking: bool = False) -> None:
         if HttpRequestManager.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
@@ -314,14 +314,11 @@ class HttpRequestManager(TaskManager):
                 # Do nothing if there's no more requests to process
                 if not self._request_queue:
                     self._process_requests_scheduled = False
-                    Logger.log("d", "No more requests to process, stop")
                     return
 
                 # Do not exceed the max request limit
                 if len(self._requests_in_progress) >= self._max_concurrent_requests:
                     self._process_requests_scheduled = False
-                    Logger.log("d", "The in-progress requests has reached the limit %s, stop",
-                               self._max_concurrent_requests)
                     return
 
                 # Fetch the next request and process
@@ -342,8 +339,6 @@ class HttpRequestManager(TaskManager):
         # Issue the request and add the reply into the currently in-progress requests set
         reply = method(*args)
         request_data.reply = reply
-
-        Logger.log("i", "Request [%s] started", request_data.request_id)
 
         # Connect callback signals
         reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
@@ -384,7 +379,6 @@ class HttpRequestManager(TaskManager):
 
         # Schedule the error callback if there is one
         if request_data.error_callback is not None:
-            Logger.log("d", "%s error callback scheduled", request_data)
             self.callLater(0, request_data.error_callback, request_data.reply, error)
 
         # Continue to process the next request
@@ -404,8 +398,6 @@ class HttpRequestManager(TaskManager):
                 Logger.log("d", "%s was aborted, do nothing", request_data)
             # stop processing for any kind of error
             return
-
-        Logger.log("i", "Request [%s] finished.", request_data.request_id)
 
         if self._enable_request_benchmarking:
             time_spent = None  # type: Optional[float]

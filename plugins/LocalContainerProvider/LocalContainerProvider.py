@@ -28,7 +28,7 @@ class LocalContainerProvider(ContainerProvider):
 
     def __init__(self):
         """Creates the local container provider.
-        
+
         This creates a cache which translates container IDs to their file names.
         """
 
@@ -39,12 +39,14 @@ class LocalContainerProvider(ContainerProvider):
 
         self._is_read_only_cache = {}  # type: Dict[str, bool]
 
+        self._storage_path = ""
+
     def getContainerFilePathById(self, container_id: str) -> Optional[str]:
         return self._id_to_path.get(container_id)
 
     def getAllIds(self) -> Iterable[str]:
         """Gets the IDs of all local containers.
-        
+
         :return: A sequence of all container IDs.
         """
 
@@ -130,7 +132,7 @@ class LocalContainerProvider(ContainerProvider):
 
     def loadMetadata(self, container_id: str) -> Dict[str, Any]:
         """Load the metadata of a specified container.
-        
+
         :param container_id: The ID of the container to load the metadata of.
         :return: The metadata of the specified container, or `None` if the
                  metadata failed to load.
@@ -172,14 +174,17 @@ class LocalContainerProvider(ContainerProvider):
 
     def isReadOnly(self, container_id: str) -> bool:
         """Returns whether a container is read-only or not.
-        
+
         A container can only be modified if it is stored in the data directory.
         :return: Whether the specified container is read-only.
         """
 
         if container_id in self._is_read_only_cache:
             return self._is_read_only_cache[container_id]
-        storage_path = os.path.realpath(Resources.getDataStoragePath())
+        if self._storage_path == "":
+            self._storage_path = os.path.realpath(Resources.getDataStoragePath())
+        storage_path = self._storage_path
+
         file_path = self._id_to_path[container_id]  # If KeyError: We don't know this ID.
 
         # The container is read-only if file_path is not a subdirectory of storage_path.
@@ -221,10 +226,10 @@ class LocalContainerProvider(ContainerProvider):
 
     def _loadCachedDefinition(self, definition_id) -> Optional[DefinitionContainer]:
         """Load a pre-parsed definition container.
-        
+
         Definition containers can be quite expensive to load, so this loads a
         pickled version of the definition if one is available.
-        
+
         :param definition_id: The ID of the definition to load from the cache.
         :return: If a cached version was available, return it. If not, return
                  ``None``.
@@ -263,10 +268,10 @@ class LocalContainerProvider(ContainerProvider):
 
     def _saveCachedDefinition(self, definition: DefinitionContainer) -> None:
         """Cache a definition container on disk.
-        
+
         Definition containers can be quite expensive to parse and load, so this
         pickles a container and saves the pre-parsed definition on disk.
-        
+
         :param definition: The definition container to store.
         """
 
@@ -293,7 +298,7 @@ class LocalContainerProvider(ContainerProvider):
 
     def _updatePathCache(self) -> None:
         """Updates the cache of paths to containers.
-        
+
         This way we can more easily load the container files we want lazily.
         """
 
@@ -321,7 +326,7 @@ class LocalContainerProvider(ContainerProvider):
     @staticmethod
     def _pathToMime(path: str) -> Optional[MimeType]:
         """Converts a file path to the MIME type of the container it represents.
-        
+
         :return: The MIME type or None if it's not a container.
         """
 
