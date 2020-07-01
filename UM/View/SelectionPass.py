@@ -107,7 +107,7 @@ class SelectionPass(RenderPass):
 
             if node.isSelectable() and node.getMeshData():
                 selectable_objects = True
-                batch.addItem(transformation = node.getWorldTransformation(copy = False), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)})
+                batch.addItem(transformation = node.getWorldTransformation(copy = False), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)}, normal_transformation=node.getCachedNormalMatrix())
 
         self.bind()
         if selectable_objects:
@@ -133,7 +133,7 @@ class SelectionPass(RenderPass):
 
             if node.isSelectable() and node.getMeshData():
                 selectable_objects = True
-                batch.addItem(transformation = node.getWorldTransformation(copy = False), mesh = node.getMeshData())
+                batch.addItem(transformation = node.getWorldTransformation(copy = False), mesh = node.getMeshData(), normal_transformation=node.getCachedNormalMatrix())
 
         self.bind()
         if selectable_objects:
