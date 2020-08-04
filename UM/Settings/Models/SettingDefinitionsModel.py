@@ -48,6 +48,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._root = None  # type: Optional[SettingDefinition]
 
         self._definition_list = []  # type: List[SettingDefinition]
+        self._index_cache = {} # type: Dict[SettingDefinition, int]
         self._row_index_list = []  # type: List[int]
 
         self._expanded = set()  # type: Set[str]
@@ -581,12 +582,17 @@ class SettingDefinitionsModel(QAbstractListModel):
         return self._role_names
 
     def _onVisibilityChanged(self) -> None:
-
         if self._visibility_handler:
             self._visible = self._visibility_handler.getVisible()
 
-        for row in range(len(self._row_index_list)):
-            self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.VisibleRole])
+        if self._show_all:
+            # We only need to emit the data in the case of the show all, otherwise the
+            # data will be filtered anyway.
+            # it should be possible (and faster) to emit a single datachanged, but this
+            # caused problems with the settingVisibilityPreference panel.
+            # I couldn't figure that out, so perhaps it's worht it to re-evaluate this later
+            for row in range(len(self._row_index_list)):
+                self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.VisibleRole])
 
         self._updateVisibleRows()
 
@@ -625,6 +631,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         if len(new_definitions) != len(self._definition_list):
             self.beginResetModel()
             self._definition_list = new_definitions
+            self._updateIndexCache()
             self._row_index_list.clear()
             self._scheduleUpdateVisibleRows()
             self.endResetModel()
@@ -632,8 +639,14 @@ class SettingDefinitionsModel(QAbstractListModel):
             # If the length hasn't changed, we can just notify that the data was changed. This will prevent the existing
             # QML setting items from being re-created every you switch between machines.
             self._definition_list = new_definitions
+            self._updateIndexCache()
             self._scheduleUpdateVisibleRows()
             self.dataChanged.emit(self.index(0, 0), self.index(len(self._definition_list) - 1, 0))
+
+    def _updateIndexCache(self) -> None:
+        # During updating the visible rows, we need to do a lot of index operations. Those are rather expensive, so
+        # we create a cache here. That way we we can get the index in constant time!
+        self._index_cache = {definition: index for index, definition in enumerate(self._definition_list)}
 
     # Update the list of visible rows.
     #
@@ -755,7 +768,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         parent = self._definition_list[index].parent
         parent_row = 0
         while parent:
-            parent_index = self._definition_list.index(parent)
+            parent_index = self._index_cache[parent]
             try:
                 parent_row = self._row_index_list.index(parent_index)
                 break
