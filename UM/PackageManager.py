@@ -172,10 +172,10 @@ class PackageManager(QObject):
         with container_registry.lockFile():
             try:
                 # Load the user packages:
-                with open(cast(str, self._user_package_management_file_path), "r", encoding="utf-8") as f:
+                with open(cast(str, self._user_package_management_file_path), "r", encoding = "utf-8") as f:
                     try:
                         management_dict = json.load(f)
-                    except JSONDecodeError:
+                    except (JSONDecodeError, UnicodeDecodeError):
                         # The file got corrupted, ignore it. This happens extremely infrequently.
                         # The file will get overridden once a user downloads something.
                         return
@@ -562,7 +562,11 @@ class PackageManager(QObject):
             if not os.path.exists(src_dir_path):
                 Logger.log("w", "The path %s does not exist, so not installing the files", src_dir_path)
                 continue
-            self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
+            try:
+                self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
+            except EnvironmentError as e:
+                Logger.log("e", "Can't install package due to EnvironmentError: {err}".format(err = str(e)))
+                continue
 
         # Remove the file
         try:
