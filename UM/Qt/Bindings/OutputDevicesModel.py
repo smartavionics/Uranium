@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
@@ -70,7 +70,7 @@ class OutputDevicesModel(ListModel):
             return
 
         self._items.clear()
-        devices = self._device_manager.getOutputDevices()
+        devices = list(self._device_manager.getOutputDevices())[:]  # Make a copy here, because we could discover devices during iteration.
         for device in devices:
             self._items.append({
                 "id": device.getId(),
