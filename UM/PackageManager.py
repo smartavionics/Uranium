@@ -187,6 +187,9 @@ class PackageManager(QObject):
             except FileNotFoundError:
                 Logger.log("i", "User package management file %s doesn't exist, do nothing", self._user_package_management_file_path)
                 return
+            except EnvironmentError:
+                Logger.warning("User package management file is inaccessible! Can't see if we need to install packages!")
+                return
 
         # For packages that become bundled in the new releases, but a lower version was installed previously, we need
         # to remove the old lower version that's installed in the user's folder.
@@ -246,7 +249,7 @@ class PackageManager(QObject):
         container_registry = self._application.getContainerRegistry()
         with container_registry.lockFile():
             try:
-                with open(cast(str,self._user_package_management_file_path), "w", encoding = "utf-8") as f:
+                with open(cast(str, self._user_package_management_file_path), "w", encoding = "utf-8") as f:
                     data_dict = {"version": PackageManager.Version,
                                  "installed": self._installed_package_dict,
                                  "to_remove": list(self._to_remove_package_set),
@@ -635,7 +638,7 @@ class PackageManager(QObject):
         except zipfile.BadZipFile as e:
             Logger.error("Package is corrupt: {err}".format(err = str(e)))
             license_string = None
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, LookupError):
             Logger.error("Package filenames are not UTF-8 encoded! Encoding unknown.")
             license_string = None
         return license_string
