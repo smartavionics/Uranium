@@ -88,10 +88,16 @@ class Logger:
             for logger in cls.__loggers:
                 logger.log(log_type, message)
         except Exception as e:
-            print("FAILED TO LOG: ", log_type, message, e)
+            try:
+                print("FAILED TO LOG: ", log_type, message, e, file=sys.stderr)
+            except Exception as ex:
+                print("!FAILED TO FAIL TO LOG! ", log_type, e, ex, file=sys.stderr)
 
         if not cls.__loggers:
-            print(message, file=sys.stderr)
+            try:
+                print(message, file=sys.stderr)
+            except Exception as e:
+                print("!FAILED TO FAIL TO LOG! ", log_type, e, file=sys.stderr)
 
     @classmethod
     def logException(cls, log_type: str, message: str, *args):
