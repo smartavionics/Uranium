@@ -46,7 +46,8 @@ class FileProviderModel(ListModel):
             "name"         : "LocalFileProvider",
             "displayText"  : "From Disk",
             "fileProvider" : None,  # it's not loaded via a plugin, so its FileProvider is empty
-            "shortcut"     : "Ctrl+O"
+            "shortcut"     : "Ctrl+O",
+            "priority"     : 99,  # Assign a high value to make sure it appears on top in the File->Open File(s) submenu
         })
 
         for file_provider in self._application.getFileProviders():
@@ -59,8 +60,11 @@ class FileProviderModel(ListModel):
                     "name": plugin_id,
                     "displayText" : file_provider.menu_item_display_text,
                     "fileProvider": file_provider,
-                    "shortcut": file_provider.shortcut
+                    "shortcut": file_provider.shortcut,
+                    "priority": file_provider.priority,
                 })
+
+        self.sort(lambda x: -float(x["priority"]))
 
     @pyqtSlot(str)
     def trigger(self, file_provider_name) -> None:

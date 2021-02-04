@@ -1,25 +1,29 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from enum import Enum
-from typing import Dict, Optional, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING, ValuesView, KeysView
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
-from .ProjectOutputDevice import ProjectOutputDevice
 
 if TYPE_CHECKING:
     from UM.OutputDevice.OutputDevice import OutputDevice
+    from UM.OutputDevice.ProjectOutputDevice import ProjectOutputDevice
     from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 
-# Used internally to determine plugins capable of 'manual' addition of devices, see also [add|remove]ManualDevice below.
+
 class ManualDeviceAdditionAttempt(Enum):
+    """
+    Used internally to determine plugins capable of 'manual' addition of devices, see also [add|remove]ManualDevice below.
+    """
     NO = 0,        # The plugin can't add a device 'manually' (or at least not with the given parameters).
     POSSIBLE = 1,  # The plugin will try to add the (specified) device 'manually', unless another plugin has priority.
     PRIORITY = 2   # The plugin has determined by the specified parameters that it's responsible for adding this device
                    #     and thus has priority. If this fails, the plugins that replied 'POSSIBLE' will be tried.
                    #     NOTE: This last value should be used with great care!
+
 
 @signalemitter
 class OutputDeviceManager:
@@ -115,7 +119,7 @@ class OutputDeviceManager:
     activeDeviceChanged = Signal()
     """Emitted whenever the active device changes."""
 
-    def getOutputDevices(self):
+    def getOutputDevices(self) -> ValuesView["OutputDevice"]:
         """Get a list of all registered output devices.
 
         :return: :type{list} A list of all registered output devices.
@@ -123,7 +127,7 @@ class OutputDeviceManager:
 
         return self._output_devices.values()
 
-    def getProjectOutputDevices(self):
+    def getProjectOutputDevices(self) -> ValuesView["ProjectOutputDevice"]:
         """Get a list of all registered output devices.
 
         :return: :type{list} A list of all registered output devices.
@@ -131,7 +135,7 @@ class OutputDeviceManager:
 
         return self._project_output_devices.values()
 
-    def getOutputDeviceIds(self):
+    def getOutputDeviceIds(self) -> KeysView[str]:
         """Get a list of all IDs of registered output devices.
 
         :return: :type{list} A list of all registered output device ids.
