@@ -73,10 +73,6 @@ class FileHandler(QObject):
 
         return file_types
 
-    @pyqtSlot(QUrl, result = bool)
-    def getAddToRecentFilesHint(self, file: QUrl) -> bool:
-        return file in self._add_to_recent_files_hints
-
     @pyqtSlot(QUrl, bool)
     @pyqtSlot(QUrl)
     def readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True) -> None:
@@ -84,9 +80,9 @@ class FileHandler(QObject):
             return
         if add_to_recent_files_hint:
             self._add_to_recent_files_hints.append(file)
-        self._readLocalFile(file)
+        self._readLocalFile(file, add_to_recent_files_hint)
 
-    def _readLocalFile(self, file: QUrl) -> None:
+    def _readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True) -> None:
         raise NotImplementedError("_readLocalFile needs to be implemented by subclasses")
 
     def getSupportedFileTypesWrite(self) -> List[Dict[str, Union[str, int]]]:
