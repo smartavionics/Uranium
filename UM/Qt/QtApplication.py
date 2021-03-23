@@ -224,8 +224,8 @@ class QtApplication(QApplication, Application):
             self._preferences.deserialize(serialized)
             self._preferences.setValue("general/plugins_to_remove", "")
             self._preferences.writeToFile(preferences_filename)
-        except (FileNotFoundError, UnicodeDecodeError):
-            Logger.log("i", "The preferences file cannot be found or it is corrupted, so we will use default values")
+        except (EnvironmentError, UnicodeDecodeError):
+            Logger.log("i", "The preferences file cannot be opened or it is corrupted, so we will use default values")
 
         self.processEvents()
         # Force the configuration file to be written again since the list of plugins to remove maybe changed
@@ -603,6 +603,7 @@ class QtApplication(QApplication, Application):
     @pyqtSlot()
     def resetWorkspace(self) -> None:
         self._workspace_metadata_storage.clear()
+        self._current_workspace_information.clear()
         self.deleteAll()
         self.workspaceLoaded.emit("")
         self.getController().getScene().clearMetaData()
