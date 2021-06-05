@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, cast, Dict, List, Optional, TYPE_CHECKING
 
 import numpy
 
@@ -16,6 +16,8 @@ from UM.Mesh.MeshData import MeshData
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 from UM.Signal import Signal, signalemitter
 
+if TYPE_CHECKING:
+    from UM.MimeTypeDatabase import MimeType
 
 @signalemitter
 class SceneNode:
@@ -88,6 +90,7 @@ class SceneNode:
         self._name = name  # type: str
         self._id = node_id  # type: str
         self._decorators = []  # type: List[SceneNodeDecorator]
+        self.source_mime_type = None  # type: Optional[MimeType]  # MIME type of the source file this node was created from.
 
         # Store custom settings to be compatible with Savitar SceneNode
         self._settings = {}  # type: Dict[str, Any]
@@ -521,7 +524,10 @@ class SceneNode:
         self._cached_normal_matrix = Matrix(self.getWorldTransformation(copy=False).getData())
         self._cached_normal_matrix.setRow(3, [0, 0, 0, 1])
         self._cached_normal_matrix.setColumn(3, [0, 0, 0, 1])
-        self._cached_normal_matrix.pseudoinvert()
+        try:
+            self._cached_normal_matrix.pseudoinvert()
+        except numpy.linalg.LinAlgError:  # Inversion can fail if the transformation is singular. In that case, the normal vectors would become degenerate anyway.
+            pass
         self._cached_normal_matrix.transpose()
 
     def getCachedNormalMatrix(self) -> Matrix:
