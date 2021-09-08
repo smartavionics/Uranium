@@ -1,13 +1,13 @@
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.11\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-08-11 10:01+0200\n"
-"PO-Revision-Date: 2021-04-16 15:10+0200\n"
+"PO-Revision-Date: 2021-09-06 14:32+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, Brule <jason@brule.co.jp>, Japanese <info@bothof.nl>\n"
 "Language: ja_JP\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
@@ -72,7 +72,7 @@ msgstr "ディスクに保存する"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
-msgstr ""
+msgstr "ディスクへ"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
@@ -208,13 +208,13 @@ msgstr "モデルを動かす"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number}ベータ版が利用可能です！"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
+msgstr "最新のベータ版をお試しいただき、{application_name}の改善にご協力ください。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
@@ -431,12 +431,12 @@ msgstr "プラグイン{}は検証できなかったため、読み込まれて�
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr ""
+msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"
 msgid "Remove plugin"
-msgstr ""
+msgstr "プラグインを削除"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format

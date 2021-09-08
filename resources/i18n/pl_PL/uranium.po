@@ -210,13 +210,13 @@ msgstr "Przenieś model"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number} BETA is available!"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
+msgstr "Try out the latest BETA version and help us improve {application_name}."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
@@ -434,7 +434,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr ""
+msgstr "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"
@@ -726,7 +726,7 @@ msgstr "Umożliwia tworzenie plików Wavefront OBJ."
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ Writer"
+msgstr ""
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
@@ -746,7 +746,7 @@ msgstr "Zapewnia wsparcie dla tworzenia plików STL."
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
-msgstr "STL Writer"
+msgstr ""
 
 #: FileLogger/plugin.json
 msgctxt "description"

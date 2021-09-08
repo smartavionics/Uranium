@@ -1,13 +1,13 @@
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.11\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-08-11 10:01+0200\n"
-"PO-Revision-Date: 2021-04-16 15:12+0200\n"
+"PO-Revision-Date: 2021-09-06 14:33+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, Jinbuhm Kim, <Jinbuhm.Kim@gmail.com>, Korean <info@bothof.nl>\n"
 "Language: ko_KR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
@@ -72,7 +72,7 @@ msgstr "디스크에 저장"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
-msgstr ""
+msgstr "디스크 가기"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
@@ -208,13 +208,13 @@ msgstr "모델 이동"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number} 베타를 사용할 수 있습니다!"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
+msgstr "최신 베타 버전을 사용해보고 {application_name} 개선에 도움을 주십시오."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
@@ -341,7 +341,7 @@ msgstr "<filename>{0}</filename>을(를) 로드하지 못했습니다 파일이 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
 msgctxt "@info:title"
 msgid "Unable to Open File"
-msgstr "파일을 열 수 없습니다."
+msgstr "파일을 열 수 없습니다"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
 msgctxt "@info:title"
@@ -431,12 +431,12 @@ msgstr "확인할 수 없어서 플러그인 {}이(가) 로딩되지 않았습�
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr ""
+msgstr "플러그인 {}을(를) 로드할 수 없습니다. 플러그인을 재설치하면 문제를 해결할 수도 있습니다"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"
 msgid "Remove plugin"
-msgstr ""
+msgstr "플러그인 제거"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format
