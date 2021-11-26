@@ -208,7 +208,7 @@ msgstr "Modelo Mover"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr "¡La versión BETA {version_number} de {application_name} ya está disponible!"
+msgstr "La versión BETA {version_number} de {application_name} ya está disponible."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
@@ -369,7 +369,7 @@ msgstr "Error al cargar <filename>{0}</filename>. El archivo podría estar daña
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "Escalado automático del modelo al {0}% del tamaño original"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"

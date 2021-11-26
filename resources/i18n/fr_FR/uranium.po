@@ -369,7 +369,7 @@ msgstr "Échec du chargement de <filename>{0}</filename>. Le fichier est peut-ê
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "Mise à l'échelle automatique du modèle à {0} % de sa taille d'origine"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
@@ -431,7 +431,7 @@ msgstr "Le plug-in {} n'a pas été chargé car il n'a pas pu être vérifié."
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr "Le plugin {} n'a pas pu être chargé. La réinstallation du plugin peut résoudre le problème"
+msgstr "Le plugin {} n'a pas pu être chargé. La réinstallation du plugin peut résoudre le problème."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"

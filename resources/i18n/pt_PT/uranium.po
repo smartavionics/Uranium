@@ -373,7 +373,7 @@ msgstr "Não foi possível carregar <filename>{0}</filename>. O ficheiro pode es
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "Modelo redimensionado automaticamente para {0}% do tamanho original"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"

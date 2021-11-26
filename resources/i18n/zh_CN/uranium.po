@@ -370,7 +370,7 @@ msgstr "无法加载 <filename>{0}</filename>。文件可能已损坏或无法�
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "已将模型自动缩放为原有大小的 {0}%"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"

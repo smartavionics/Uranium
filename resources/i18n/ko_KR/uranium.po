@@ -369,7 +369,7 @@ msgstr "<filename>{0}</filename>을(를) 로드하지 못했습니다. 파일이
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "원본크기의 {0}%로 모델 크기 자동조절"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"

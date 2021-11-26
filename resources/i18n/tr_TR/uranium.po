@@ -369,7 +369,7 @@ msgstr "<filename>{0}</filename> dosyası yüklenemedi. Dosya bozuk veya erişil
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "Model orijinal boyutun %{0} kadarına otomatik ölçeklendirilir"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"

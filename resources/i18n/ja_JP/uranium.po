@@ -208,7 +208,7 @@ msgstr "モデルを動かす"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr "{application_name} {version_number}ベータ版が利用可能です！"
+msgstr "{application_name} {version_number}ベータ版が利用可能です。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
@@ -369,7 +369,7 @@ msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファ
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "元のサイズの{0}%まで自動的にスケールされたモデル"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"

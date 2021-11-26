@@ -369,7 +369,7 @@ msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk corrupt
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "Het model is automatisch geschaald naar {0}% van de oorspronkelijke grootte"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"

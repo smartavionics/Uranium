@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.12\n"
 "Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
 "POT-Creation-Date: 2021-10-20 16:58+0200\n"
-"PO-Revision-Date: 2021-06-19 06:29+0200\n"
+"PO-Revision-Date: 2021-11-04 08:34+0100\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -214,7 +214,7 @@ msgstr "{application_name} {version_number} BETA está disponível!"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "Tenta a versão BETA mais nova e nos ajude a aprimorar o {application_name}."
+msgstr "Tente a última versão BETA e nos ajude a melhorar {application_name}."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
@@ -369,7 +369,7 @@ msgstr "Falha em carregar <filename>{0}</filename>. O arquivo pode estar corromp
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "Modelo auto-redimensionado para {0}% do tamanho original"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
