@@ -5,7 +5,7 @@ import sys
 import threading
 import traceback
 import inspect
-from typing import List
+from typing import List, Tuple
 
 from UM.PluginObject import PluginObject
 
@@ -15,6 +15,8 @@ class Logger:
 
     __loggers = []  # type: List[Logger]
 
+    __unlogged_lines: List[Tuple[str, str]] = []
+
     def __init__(self):
         raise Exception("This class is static only")
 
@@ -23,6 +25,13 @@ class Logger:
         """Add a logger to the list."""
 
         cls.__loggers.append(logger)
+        # If there are any stored log lines, make sure that this new logger handles them.
+        for log_type, line in cls.__unlogged_lines:
+            logger.log(log_type, line)
+
+    @classmethod
+    def getUnloggedLines(cls) -> List[Tuple[str, str]]:
+        return cls.__unlogged_lines
 
     @classmethod
     def getLoggers(cls) -> List["Logger"]:
@@ -84,7 +93,6 @@ class Logger:
                                                                                       function = frame_info.function,
                                                                                       line = frame_info.lineno,
                                                                                       message = message)
-
             for logger in cls.__loggers:
                 logger.log(log_type, message)
         except Exception as e:
@@ -95,7 +103,8 @@ class Logger:
 
         if not cls.__loggers:
             try:
-                print(message, file=sys.stderr)
+                # Store the log lines for when a logger is added.
+                cls.__unlogged_lines.append((log_type, message))
             except Exception as e:
                 print("!FAILED TO FAIL TO LOG! ", log_type, e, file=sys.stderr)
 
