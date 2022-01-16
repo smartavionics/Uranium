@@ -113,7 +113,9 @@ class OpenGLContext:
     @classmethod
     def haveGLESGeometryShader(cls) -> bool:
         """Return if we have GLES geometry shader capability"""
-        return QOpenGLContext.currentContext().isOpenGLES() and cls.hasExtension("GL_OES_geometry_shader")
+        c = QOpenGLContext.currentContext()
+        f = c.format();
+        return c.isOpenGLES() and (f.majorVersion() > 3 or (f.majorVersion() == 3 and f.minorVersion() >= 2))
 
     @classmethod
     def detectBestOpenGLVersion(cls, force_compatability: bool) -> Tuple[Optional[int], Optional[int], Optional[int]]:
