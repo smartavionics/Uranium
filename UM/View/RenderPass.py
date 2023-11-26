@@ -27,11 +27,12 @@ class RenderPass:
     less than this.
     """
 
-    def __init__(self, name: str, width: int, height: int, priority: int = 0) -> None:
+    def __init__(self, name: str, width: int, height: int, priority: int = 0, enable_aa: bool = False) -> None:
         self._name = name #type: str
         self._width = width #type: int
         self._height = height #type: int
         self._priority = priority #type: int
+        self._enable_aa = enable_aa #type: bool
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
@@ -159,7 +160,7 @@ class RenderPass:
             return
         samples = 0
 
-        if self._name == "simulationview":
+        if self._enable_aa:
             samples = 4
         self._fbo = OpenGL.getInstance().createFrameBufferObject(self._width, self._height, samples)
         if samples > 0:
