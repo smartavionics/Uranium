@@ -158,6 +158,13 @@ class RenderPass:
             Logger.log("w", "Tried to create render pass with size <= 0")
             return
         samples = 0
-        if type(self) != UM.View.CompositePass:
+
+        if self._name == "simulationview":
             samples = 4
         self._fbo = OpenGL.getInstance().createFrameBufferObject(self._width, self._height, samples)
+        if samples > 0:
+            fbo_samples = self._fbo._fbo.format().samples()
+            if fbo_samples != samples:
+                Logger.log("d", self.__class__.__name__ + " FrameBuffer using " + str(fbo_samples) + " samples, requested " + str(samples))
+            else:
+                Logger.log("d", self.__class__.__name__ + " FrameBuffer using " + str(fbo_samples) + " samples")
