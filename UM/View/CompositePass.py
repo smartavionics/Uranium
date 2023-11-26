@@ -83,11 +83,13 @@ class CompositePass(RenderPass):
         self._shader.setUniformValue("u_offset", offset)
 
         texture_unit = 0
+        render_passes = []
         for binding in self._layer_bindings:
             render_pass = self._renderer.getRenderPass(binding)
             if not render_pass:
                 continue
 
+            render_passes.append(render_pass)
             self._gl.glActiveTexture(getattr(self._gl, "GL_TEXTURE{0}".format(texture_unit)))
             self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, render_pass.getTextureId())
             texture_unit += 1
@@ -96,6 +98,7 @@ class CompositePass(RenderPass):
 
         for i in range(texture_unit):
             self._gl.glActiveTexture(getattr(self._gl, "GL_TEXTURE{0}".format(i)))
+            render_passes[i].updateFrameBuffer()
             self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, 0)
 
         self._shader.release()

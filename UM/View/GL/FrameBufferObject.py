@@ -15,13 +15,24 @@ class FrameBufferObject:
 
         buffer_format = QOpenGLFramebufferObjectFormat()
         buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
+        buffer_format.setSamples(4)
         self._fbo = QOpenGLFramebufferObject(width, height, buffer_format)
+        self._fbo2 = None
+        if self._fbo.format().samples() > 0:
+            self._fbo2 = QOpenGLFramebufferObject(width, height)
 
         self._contents = None
 
     def getTextureId(self) -> int:
         """Get the texture ID of the texture target of this FBO."""
+        if self._fbo2 is not None:
+            QOpenGLFramebufferObject.blitFramebuffer(self._fbo2, self._fbo)
+            return self._fbo2.texture()
         return self._fbo.texture()
+
+    def updateFrameBuffer(self) -> None:
+        if self._fbo2 is not None:
+            QOpenGLFramebufferObject.blitFramebuffer(self._fbo, self._fbo2)
 
     def bind(self) -> None:
         """Bind the FBO so it can be rendered to."""

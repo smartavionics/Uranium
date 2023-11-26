@@ -134,6 +134,10 @@ class RenderPass:
             return -1
         return self._fbo.getTextureId()
 
+    def updateFrameBuffer(self) -> None:
+        if self._fbo is not None:
+            self._fbo.updateFrameBuffer()
+
     def getOutput(self) -> QImage:
         """Get the pixel data produced by this render pass.
 
