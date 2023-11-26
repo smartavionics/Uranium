@@ -30,10 +30,6 @@ class FrameBufferObject:
             return self._fbo2.texture()
         return self._fbo.texture()
 
-    def updateFrameBuffer(self) -> None:
-        if self._fbo2 is not None:
-            QOpenGLFramebufferObject.blitFramebuffer(self._fbo, self._fbo2)
-
     def bind(self) -> None:
         """Bind the FBO so it can be rendered to."""
         self._contents = None
