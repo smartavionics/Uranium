@@ -10,12 +10,12 @@ class FrameBufferObject:
     This class describes a minimal interface that is expected of FrameBuffer Object
     classes.
     """
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int, height: int, samples: int) -> None:
         super().__init__()
 
         buffer_format = QOpenGLFramebufferObjectFormat()
         buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
-        buffer_format.setSamples(4)
+        buffer_format.setSamples(samples)
         self._fbo = QOpenGLFramebufferObject(width, height, buffer_format)
         self._fbo2 = None
         if self._fbo.format().samples() > 0:

@@ -167,12 +167,12 @@ class OpenGL:
         """
         return self._gl
 
-    def createFrameBufferObject(self, width: int, height: int) -> FrameBufferObject:
+    def createFrameBufferObject(self, width: int, height: int, samples: int) -> FrameBufferObject:
         """Create a FrameBuffer Object.
 
         This should return an implementation-specifc FrameBufferObject subclass.
         """
-        return FrameBufferObject(width, height)
+        return FrameBufferObject(width, height, samples)
 
     def createTexture(self) -> Texture:
         """Create a Texture Object.
