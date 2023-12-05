@@ -158,8 +158,8 @@ class RenderPass:
         if self._width <= 0 or self._height <= 0:
             Logger.log("w", "Tried to create render pass with size <= 0")
             return
-        samples = 0
 
+        samples = 0
         if self._enable_aa:
             samples = 4
         self._fbo = OpenGL.getInstance().createFrameBufferObject(self._width, self._height, samples)
