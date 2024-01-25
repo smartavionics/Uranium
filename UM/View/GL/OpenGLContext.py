@@ -22,6 +22,9 @@ class OpenGLContext:
         new_format = QSurfaceFormat()
         new_format.setMajorVersion(major_version)
         new_format.setMinorVersion(minor_version)
+        new_format.setRedBufferSize(8)
+        new_format.setGreenBufferSize(8)
+        new_format.setBlueBufferSize(8)
         if core:
             profile_ = QSurfaceFormat.CoreProfile
         else:
@@ -88,6 +91,9 @@ class OpenGLContext:
         new_format = QSurfaceFormat()
         new_format.setMajorVersion(major_version)
         new_format.setMinorVersion(minor_version)
+        new_format.setRedBufferSize(8)
+        new_format.setGreenBufferSize(8)
+        new_format.setBlueBufferSize(8)
         if core:
             profile_ = QSurfaceFormat.CoreProfile
         else:
