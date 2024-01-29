@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF, QRect
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QGuiApplication
 from PyQt5.QtQuick import QQuickWindow
 
 from UM.Logger import Logger
@@ -169,6 +169,10 @@ class MainWindow(QQuickWindow):
     @pyqtProperty(QRectF, fset = setViewportRect, notify = viewportRectChanged)
     def viewportRect(self):
         return self._viewport_rect
+
+    @pyqtProperty(bool)
+    def usingWayland(self) -> bool:
+        return QGuiApplication.platformName().find("wayland") >= 0
 
 #   Warning! Never reimplemented this as a QExposeEvent can cause a deadlock with QSGThreadedRender due to both trying
 #   to claim the Python GIL.
