@@ -15,29 +15,49 @@ class FrameBufferObject:
 
         buffer_format = QOpenGLFramebufferObjectFormat()
         buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
-        buffer_format.setSamples(samples)
         self._fbo = QOpenGLFramebufferObject(width, height, buffer_format)
-        self._fbo2 = None
-        if self._fbo.format().samples() > 0:
-            self._fbo2 = QOpenGLFramebufferObject(width, height)
-
         self._contents = None
+        self._fbo2 = None
+        self._usingAA = False
+        if samples > 0:
+            buffer_format = QOpenGLFramebufferObjectFormat()
+            buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
+            buffer_format.setSamples(samples)
+            self._fbo2 = QOpenGLFramebufferObject(width, height, buffer_format)
+            if self._fbo2.format().samples() > 0:
+                self._usingAA = True
+            else:
+                self._fbo2 = None
+
+    def _AAEnabled(self) -> bool:
+        return self._fbo2 is not None and self._usingAA
+
+    def getUsingAA(self) -> bool:
+        return self._AAEnabled()
+
+    def setUsingAA(self, usingAA: bool) -> None:
+        self._usingAA = usingAA
 
     def getTextureId(self) -> int:
         """Get the texture ID of the texture target of this FBO."""
-        if self._fbo2 is not None:
-            QOpenGLFramebufferObject.blitFramebuffer(self._fbo2, self._fbo)
-            return self._fbo2.texture()
+        if self._AAEnabled():
+            QOpenGLFramebufferObject.blitFramebuffer(self._fbo, self._fbo2)
         return self._fbo.texture()
 
     def bind(self) -> None:
         """Bind the FBO so it can be rendered to."""
         self._contents = None
-        self._fbo.bind()
+        if self._AAEnabled():
+            self._fbo2.bind()
+        else:
+            self._fbo.bind()
 
     def release(self) -> None:
         """Release the FBO so it will no longer be rendered to."""
-        self._fbo.release()
+        if self._AAEnabled():
+            self._fbo2.release()
+        else:
+            self._fbo.release()
 
     def getContents(self) -> QImage:
         """Get the contents of the FBO as an image data object."""

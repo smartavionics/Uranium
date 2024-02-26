@@ -149,6 +149,12 @@ class RenderPass:
             return QImage()
         return self._fbo.getContents()
 
+    def getUsingAA(self) -> bool:
+        return self._fbo.getUsingAA()
+
+    def setUsingAA(self, usingAA: bool) -> None:
+        self._fbo.setUsingAA(usingAA)
+
     def _updateRenderStorage(self) -> None:
         # On Mac OS X, this function may get called by a main window resize signal during closing.
         # This will cause a crash, so don't do anything when it is shutting down.
