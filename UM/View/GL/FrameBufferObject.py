@@ -38,6 +38,11 @@ class FrameBufferObject:
     def setUsingAA(self, usingAA: bool) -> None:
         self._usingAA = usingAA
 
+    def getSamples(self) -> int:
+        if self._fbo2 is not None:
+            return self._fbo2.format().samples()
+        return 0
+
     def getTextureId(self) -> int:
         """Get the texture ID of the texture target of this FBO."""
         if self._AAEnabled():

@@ -170,7 +170,7 @@ class RenderPass:
             samples = 4
         self._fbo = OpenGL.getInstance().createFrameBufferObject(self._width, self._height, samples)
         if samples > 0:
-            fbo_samples = self._fbo._fbo.format().samples()
+            fbo_samples = self._fbo.getSamples()
             if fbo_samples != samples:
                 Logger.log("d", self.__class__.__name__ + " FrameBuffer using " + str(fbo_samples) + " samples, requested " + str(samples))
             else:
