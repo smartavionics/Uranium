@@ -171,7 +171,7 @@ class RenderPass:
         self._fbo = OpenGL.getInstance().createFrameBufferObject(self._width, self._height, samples)
         if samples > 0:
             fbo_samples = self._fbo.getSamples()
-            if fbo_samples != samples:
-                Logger.log("d", self.__class__.__name__ + " FrameBuffer using " + str(fbo_samples) + " samples, requested " + str(samples))
+            if fbo_samples > 0:
+                Logger.log("d", "MSAA anti-aliasing is enabled using " + str(fbo_samples) + " samples, use Ctrl-/ to toggle it on and off")
             else:
-                Logger.log("d", self.__class__.__name__ + " FrameBuffer using " + str(fbo_samples) + " samples")
+                Logger.log("d", "MSAA anti-aliasing is not supported")
