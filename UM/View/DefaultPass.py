@@ -11,7 +11,7 @@ class DefaultPass(RenderPass):
     This class provides the basic rendering of the objects in the scene.
     """
     def __init__(self, width: int, height: int) -> None:
-        super().__init__("default", width, height, 0)
+        super().__init__("default", width, height, 0, True)
 
         self._renderer = UM.Qt.QtApplication.QtApplication.getInstance().getRenderer()
 
