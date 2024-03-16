@@ -167,7 +167,7 @@ class RenderPass:
 
         samples = 0
         if self._enable_aa:
-            samples = 4
+            samples = 8
         self._fbo = OpenGL.getInstance().createFrameBufferObject(self._width, self._height, samples)
         if samples > 0:
             fbo_samples = self._fbo.getSamples()
