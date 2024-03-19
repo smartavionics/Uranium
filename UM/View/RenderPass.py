@@ -172,6 +172,8 @@ class RenderPass:
         if samples > 0:
             fbo_samples = self._fbo.getSamples()
             if fbo_samples > 0:
-                Logger.log("d", "MSAA anti-aliasing is enabled using " + str(fbo_samples) + " samples, use Ctrl-/ to toggle it on and off")
+                Logger.log("d", "MSAA anti-aliasing is active in the " + self._name + " pass using " + str(fbo_samples) + " samples")
+                if self._name == "simulationview":
+                    Logger.log("d", "Use Ctrl-/ to toggle anti-aliasing on and off in the layer view")
             else:
                 Logger.log("d", "MSAA anti-aliasing is not supported")
