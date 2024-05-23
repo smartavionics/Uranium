@@ -27,7 +27,7 @@ class NewVersionMessage(AnnotatedUpdateMessage):
 
         self.addAction("download", I18N_CATALOG.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
 
-        self.addAction("new_features", I18N_CATALOG.i18nc("@action:button", "Learn more"), "[no_icon]",
-                          "[no_description]",
-                          button_style = Message.ActionButtonStyle.LINK,
-                          button_align = Message.ActionButtonAlignment.ALIGN_LEFT)
+        #self.addAction("new_features", I18N_CATALOG.i18nc("@action:button", "Learn more"), "[no_icon]",
+        #                  "[no_description]",
+        #                  button_style = Message.ActionButtonStyle.LINK,
+        #                  button_align = Message.ActionButtonAlignment.ALIGN_LEFT)
